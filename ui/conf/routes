@@ -1,0 +1,34 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET           /                              @controllers.Application.index
+GET           /link-result                   @controllers.Application.linkResult
+GET           /current-user                  @controllers.Application.currentUser
+GET           /custom/login                  @controllers.CustomLoginController.login
+GET           /custom/logout                 @controllers.CustomLoginController.logout
+# Map static resources from the /public folder to the /assets URL path
+GET           /assets/*file                  controllers.Assets.at(path="/public", file)
+->            /auth                          securesocial.Routes
+
+POST          /services/posts/create         @controllers.PostsController.create
+GET           /services/posts/list           @controllers.PostsController.list(limit:Int, start:Option[String])
+GET           /services/posts/name           @controllers.PostsController.name()
+PUT           /services/posts/update         @controllers.PostsController.update(postId:String, message:String)
+DELETE        /services/posts/delete         @controllers.PostsController.delete(postId:String)
+POST          /services/users/avatar         @controllers.UsersController.uploadAvatar
+PUT           /services/users/aboutme        @controllers.UsersController.aboutMe(text:String)
+
+#api-docs
+GET           /api-docs                      controllers.ApiHelpController.getResources
+GET           /api-docs/posts                controllers.ApiHelpController.getResource(path = "/posts")
+GET           /api-docs/users                controllers.ApiHelpController.getResource(path = "/users")
+GET           /api-docs/admin                controllers.ApiHelpController.getResource(path = "/admin")
+GET           /api-docs/responses            controllers.ApiHelpController.getResource(path = "/responses")
+#
+#- There will be only one Super Admin user and profiles will be hard coded, Super Admin user will not be created in database
+
+#- Profile Update webservice {Create & Update} --
+#Username, Age, Gender, location city, marrital status,education, profession etc
+#{developer to review this with product manager to make sure we capture all the data across all social networks correctly}
