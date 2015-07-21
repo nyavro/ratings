@@ -91,7 +91,9 @@ object ProjectBuild extends Build {
   lazy val ratingImpl = Project(
     id = "ratingImpl",
     base = file("ratingImpl"),
-    settings = super.settings ++ sharedSettings
+    settings = super.settings ++ sharedSettings ++ Seq(
+      exportJars := true
+    )
   ).settings(
     name := "ratingImpl",
     libraryDependencies ++= Seq(
