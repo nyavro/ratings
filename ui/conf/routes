@@ -26,6 +26,10 @@ GET           /api-docs/posts                controllers.ApiHelpController.getRe
 GET           /api-docs/users                controllers.ApiHelpController.getResource(path = "/users")
 GET           /api-docs/admin                controllers.ApiHelpController.getResource(path = "/admin")
 GET           /api-docs/responses            controllers.ApiHelpController.getResource(path = "/responses")
+
+
+
+GET           /test                          @controllers.MainController.index
 #
 #- There will be only one Super Admin user and profiles will be hard coded, Super Admin user will not be created in database
 
