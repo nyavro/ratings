@@ -16,6 +16,7 @@
  */
 package controllers
 
+import com.eny.rating.Category
 import play.api.mvc.Action
 import securesocial.core._
 import service.MultiProfileUser
@@ -24,7 +25,15 @@ import scala.concurrent.Future
 
 class MainController(override implicit val env: RuntimeEnvironment[MultiProfileUser]) extends securesocial.core.SecureSocial[MultiProfileUser] {
   def index = Action.async {
-    Future.successful(Ok(views.html.test()))
+    Future.successful(
+      Ok(
+        views.html.test(
+          (1 to 50).toList.map (
+            index => Category(Some(s"id$index"), s"test$index", s"test $index descr", None)
+          )
+        )
+      )
+    )
   }
 
   def linkResult = SecuredAction { implicit request =>

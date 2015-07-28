@@ -1,5 +1,31 @@
+@(categories: List[com.eny.rating.Category])
 @main("SecureSocial - Sample Protected Page") {
 <div class="page-header">
     <h2>Welcome Test</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">@play.i18n.Messages.get("panel.categories.title")</div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table">
+                @categories.grouped(5).map { row =>
+                    <tr>
+                        @row.map { category =>
+                            <td>
+                                <a href="/category=@category.id">
+                                    @category.name
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+    <ul class="list-group">
+
+    </ul>
 </div>
 }
