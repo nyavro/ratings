@@ -15,9 +15,10 @@
  *
  */
 package controllers
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import com.eny.rating.Category
-import play.api.mvc.Action
+import play.api.libs.iteratee.{Enumerator, Iteratee}
+import play.api.mvc.{WebSocket, Action}
 import securesocial.core._
 import service.MultiProfileUser
 
@@ -49,6 +50,19 @@ class MainController(override implicit val env: RuntimeEnvironment[MultiProfileU
       val userId = maybeUser.map(_.main.userId).getOrElse("unknown")
       Ok(s"Your id is $userId")
     }
+  }
+
+  def stream = WebSocket.using[String] { request =>
+
+    // Log events to the console
+    val in = Iteratee.foreach[String](println).map { _ =>
+      println("Disconnected")
+    }
+
+    // Send a single 'Hello!' message
+    val out = Enumerator("Hello!")
+
+    (in, out)
   }
 }
 

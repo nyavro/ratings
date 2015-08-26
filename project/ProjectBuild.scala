@@ -97,12 +97,34 @@ object ProjectBuild extends Build {
   ).settings(
     name := "ratingImpl",
     libraryDependencies ++= Seq(
-      "org.apache.commons" % "commons-io" % "1.3.2"
+      "commons-io" % "commons-io" % "2.4"
     ),
     mappings in (Compile, packageBin) ++= Seq(
       (baseDirectory.value / "exports.txt") -> "META-INF/services/com.eny.rating.Agent"
     )
   ) dependsOn (ratingApi, utils)
+
+  lazy val legalEntityApi = Project(
+    id = "legalEntityApi",
+    base = file("legalEntityApi")
+  ).settings(
+    name := "legalEntityApi"
+  )
+
+  lazy val legalEntityImpl = Project(
+    id = "legalEntityImpl",
+    base = file("legalEntityImpl")
+  ).settings(
+    name := "legalEntityImpl",
+    libraryDependencies ++= Seq(
+      "commons-io" % "commons-io" % "2.4",
+      "org.apache.commons" % "commons-lang3" % "3.4",
+      "joda-time" % "joda-time" % "2.8.2"
+    ),
+    mappings in (Compile, packageBin) ++= Seq(
+      (baseDirectory.value / "exports.txt") -> "META-INF/services/com.eny.rating.Agent"
+    )
+  ) dependsOn legalEntityApi
 
   lazy val sharedSettings = super.settings ++ Seq(
     version := "1.0.0",
