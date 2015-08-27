@@ -10,7 +10,6 @@ class PositionCommandTest extends Document {
    override def generate(legalEntity: LegalEntity): OutputStream = {
      val out = ByteArrayOutputStream
      val zip = new ZipOutputStream(out)
-
      zip
    }
  }

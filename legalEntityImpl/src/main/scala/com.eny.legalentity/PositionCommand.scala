@@ -6,6 +6,7 @@ import java.util.{Locale, Date}
 import java.util.zip.{ZipFile, ZipEntry, ZipOutputStream}
 
 import com.eny.person.Person
+import com.eny.utils.formatting.{LastFMFormat, GenitiveCaseDateFormat, DateFormatting}
 import org.apache.commons.io.IOUtils
 import org.apache.commons.io.filefilter.HiddenFileFilter
 import org.apache.commons.lang3.time.{DateFormatUtils, FastDateFormat}
@@ -22,12 +23,6 @@ class PositionCommand extends Document {
     val out = new FileOutputStream("/home/eny/out.docx")
     val zip = new ZipOutputStream(out)
 
-    def formatDateGen(date:Date) = {
-      val jdate = new DateTime(date.getTime)
-      val months = List("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-      s"${jdate.getDayOfMonth} ${months(jdate.monthOfYear.get)} ${jdate.year.get}"
-    }
-
     val map = Map(
       "entity_name" -> legalEntity.name,
       "entity_inn" -> legalEntity.inn,
@@ -35,9 +30,9 @@ class PositionCommand extends Document {
       "order_number" -> 1.toString,
       "entity_form_short" -> legalEntity.form.short,
       "entity_form_full" -> legalEntity.form.full,
-      "directors_last_fm" -> s"${legalEntity.director.last} ${legalEntity.director.name.charAt(0).toUpper}. ${legalEntity.director.middle.charAt(0).toUpper}.",
-      "entity_found_gen" -> formatDateGen(legalEntity.foundationDate),
-      "order_date_gen" -> formatDateGen(legalEntity.foundationDate)
+      "directors_last_fm" -> new LastFMFormat(legalEntity.director.last, legalEntity.director.name, legalEntity.director.middle).format,
+      "entity_found_gen" -> new GenitiveCaseDateFormat(legalEntity.foundationDate).format,
+      "order_date_gen" -> new GenitiveCaseDateFormat(legalEntity.foundationDate).format
     )
 
     def replace(src:String) = {

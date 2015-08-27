@@ -5,6 +5,9 @@ import play.PlayScala
 
 object ProjectBuild extends Build {
 
+  val ScalaVersion = "2.11.7"
+  val ScalatestVersion = "3.0.0-M7"
+  val ReactiveMongoVersion = "0.11.6"
 
   resourceGenerators in Compile <+=
     (resourceManaged in Compile, name, version) map { (dir, n, v) =>
@@ -18,7 +21,7 @@ object ProjectBuild extends Build {
     id = "parent",
     base = file("."),
     settings = Defaults.coreDefaultSettings ++ sharedSettings,
-    aggregate = Seq(repository, service, ui, ratingImpl)
+    aggregate = Seq(repository, service, ui, ratingImpl, utils)
   ).settings(
     name := "play-social-forum"
   )
@@ -28,8 +31,13 @@ object ProjectBuild extends Build {
     base = file("utils"),
     settings = super.settings ++ sharedSettings
   ).settings(
-      name := "utils"
+    name := "utils",
+    libraryDependencies ++= Seq(
+      "joda-time" % "joda-time" % "2.8.2",
+      "org.scalatest" % "scalatest_2.11" % ScalatestVersion % "test",
+      "commons-lang" % "commons-lang" % "2.2" % "test"
     )
+  )
 
   lazy val ui = Project(
     id = "ui",
@@ -62,7 +70,7 @@ object ProjectBuild extends Build {
       "com.typesafe.akka"      %% "akka-actor"            % "2.3.4",
       "com.typesafe.akka"      %% "akka-slf4j"            % "2.3.4",
       "org.apache.commons"     %  "commons-email"         % "1.3.3",
-      "org.specs2"             %% "specs2"                % "1.14"  % "test",
+      "org.scalatest" % "scalatest_2.11" % ScalatestVersion % "test",
       "com.typesafe.akka"      %% "akka-testkit"          % "2.3.4" % "test",
       "org.scalamock"    %% "scalamock-scalatest-support" % "3.2.1" % "test"
     )
@@ -74,7 +82,7 @@ object ProjectBuild extends Build {
     settings = Defaults.coreDefaultSettings ++ sharedSettings
   ).settings(
       name := "repository",
-      scalaVersion := "2.10.4"
+      scalaVersion := ScalaVersion
 //      libraryDependencies ++= Seq(
 //        "org.scalatest" % "scalatest_2.11" % "2.2.5"
 //      )
@@ -119,16 +127,16 @@ object ProjectBuild extends Build {
     libraryDependencies ++= Seq(
       "commons-io" % "commons-io" % "2.4",
       "org.apache.commons" % "commons-lang3" % "3.4",
-      "joda-time" % "joda-time" % "2.8.2"
+      "org.reactivemongo" % "reactivemongo_2.11" % ReactiveMongoVersion
     ),
     mappings in (Compile, packageBin) ++= Seq(
       (baseDirectory.value / "exports.txt") -> "META-INF/services/com.eny.rating.Agent"
     )
-  ) dependsOn legalEntityApi
+  ) dependsOn (legalEntityApi, utils)
 
   lazy val sharedSettings = super.settings ++ Seq(
     version := "1.0.0",
-    scalaVersion := "2.10.4",
+    scalaVersion := ScalaVersion,
     autoCompilerPlugins := true,
     scalacOptions ++= Seq(
       "-language:postfixOps",
